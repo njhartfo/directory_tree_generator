@@ -19,7 +19,7 @@ class DirectoryTree:
 	def genearte(self):
 		tree = self._generator.build_tree()
 		if self._output_file != sys.stdout:
-			tree.appendleft("'''")
+			tree.insert(0,"'''")
 			tree.append("'''")
 			self._output_file = open(
 				self._output_file, mode = 'w', encoding="UTF-8"
