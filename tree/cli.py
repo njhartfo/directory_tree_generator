@@ -11,7 +11,7 @@ def main():
 	if not root_dir.is_dir():
 		print("The specified root directory does not exist.")
 		sys.exit()
-	tree = DirectoryTree(root_dir)
+	tree = DirectoryTree(root_dir, dir_only=args.dir_only)
 	tree.generate()
 	
 def parse_cmd_line_arguments():
@@ -21,7 +21,11 @@ def parse_cmd_line_arguments():
 		epilog="Thanks for using Tree.",
 	)
 	parser.version = f"Tree v{__version__}"
-	parser.add_arguments("-v", "--version", action="version")
+	parser.add_arguments(
+		"-v", 
+		"--version", 
+		action="version"
+	)
 	parser.add_arguments(
 		"root_dir",
 		metavar="ROOT_DIR",
@@ -29,7 +33,10 @@ def parse_cmd_line_arguments():
 		default=".",
 		help="Generate a full directory tree starting at ROOT_DIR",
 	)
+	parser.add_arguments(
+		"-d",
+		"--dir-only",
+		action="store_true",
+		help="Generate a directory-only tree",
+	)
 	return parser.parse_args()
-
-# get command line/parse command line arguments
-# return parsed information to pass to to tree generator
