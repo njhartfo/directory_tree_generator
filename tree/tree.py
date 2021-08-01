@@ -29,8 +29,9 @@ class DirectoryTree:
 				print(entry, file=stream)
 		
 class _TreeGenerator:
-	def __init__(self, root_dir):
+	def __init__(self, root_dir, dir_only=False):
 		self._root_dir = pathlib.Path(root_dir)
+		self._dir_only = dir_only
 		self._tree = []
 		
 	def build_tree(self):
@@ -43,7 +44,7 @@ class _TreeGenerator:
 		self._tree.append(PIPE)
 	
 	def _tree_body(self, directory, prefix=""):
-		entries = directory.iterdir()
+		entries = self._prepare_entries(directory)
 		entries = sorted(entries, key=lambda entry: entry.is_file())
 		entries_count = len(entries)
 		for index, entry in enumerate(entries):
@@ -52,6 +53,14 @@ class _TreeGenerator:
 				self._add_directory(entry,index,entries_count,prefix,connector)
 			else:
 				self._add_file(entry, prefix, connector)
+				
+	def _prepare_entries(self,directory):
+		entries = directory.iterdir()
+		if self._dir_only:
+			entries = [entry for entry in entries if entry.is_dir()]
+			return entries
+		entries = sorted(entries, key=lambda entry: entry.is_file())
+		return entries
 				
 	def _add_directory(self, directory, index, entries_count, prefix, connector):
 		self._tree.append(f"{prefix}{connector} {directory.name}{os.sep}")
